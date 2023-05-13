@@ -1,8 +1,6 @@
-from distutils.util import strtobool
-
 from django_filters import rest_framework
 
-from .models import Favorite, Recipe, ShoppingCart
+from .models import Recipe
 from tags.models import Tag
 
 
