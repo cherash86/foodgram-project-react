@@ -125,3 +125,5 @@ Python-разработчик (Backend)
 E-mail: cherash86@mail.ru 
 Telegram: @cherash86
 
+Админ-зона доступна по адресу http://158.160.62.103/admin/, login - admin, password - 12345
+Проект доступен по адресу http://158.160.62.103/recipes

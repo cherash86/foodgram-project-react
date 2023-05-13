@@ -5,19 +5,12 @@ from django_filters import rest_framework
 from .models import Favorite, Recipe, ShoppingCart
 from tags.models import Tag
 
-CHOICES_LIST = (
-    ('0', 'False'),
-    ('1', 'True')
-)
-
 
 class RecipeFilter(rest_framework.FilterSet):
-    is_favorited = rest_framework.ChoiceFilter(
-        choices=CHOICES_LIST,
+    is_favorited = rest_framework.BooleanFilter(
         method='is_favorited_method'
     )
-    is_in_shopping_cart = rest_framework.ChoiceFilter(
-        choices=CHOICES_LIST,
+    is_in_shopping_cart = rest_framework.BooleanFilter(
         method='is_in_shopping_cart_method'
     )
     author = rest_framework.NumberFilter(
@@ -31,30 +24,16 @@ class RecipeFilter(rest_framework.FilterSet):
     )
 
     def is_favorited_method(self, queryset, name, value):
-        if self.request.user.is_anonymous:
-            return Recipe.objects.none()
-
-        favorites = Favorite.objects.filter(user=self.request.user)
-        recipes = [item.recipe.id for item in favorites]
-        new_queryset = queryset.filter(id__in=recipes)
-
-        if not strtobool(value):
-            return queryset.difference(new_queryset)
-
-        return queryset.filter(id__in=recipes)
+        user = self.request.user
+        if value and user.is_authenticated:
+            return queryset.filter(in_favorite__user=user)
+        return queryset
 
     def is_in_shopping_cart_method(self, queryset, name, value):
-        if self.request.user.is_anonymous:
-            return Recipe.objects.none()
-
-        shopping_cart = ShoppingCart.objects.filter(user=self.request.user)
-        recipes = [item.recipe.id for item in shopping_cart]
-        new_queryset = queryset.filter(id__in=recipes)
-
-        if not strtobool(value):
-            return queryset.difference(new_queryset)
-
-        return queryset.filter(id__in=recipes)
+        user = self.request.user
+        if value and user.is_authenticated:
+            return queryset.filter(in_shopping_list__user=user)
+        return queryset
 
     class Meta:
         model = Recipe

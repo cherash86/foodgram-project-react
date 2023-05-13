@@ -14,20 +14,12 @@ User = get_user_model()
 
 
 class RecipeIngredientsSerializer(serializers.ModelSerializer):
-    id = serializers.SerializerMethodField(method_name='get_id')
-    name = serializers.SerializerMethodField(method_name='get_name')
-    measurement_unit = serializers.SerializerMethodField(
-        method_name='get_measurement_unit'
-    )
-
-    def get_id(self, obj):
-        return obj.ingredient.id
-
-    def get_name(self, obj):
-        return obj.ingredient.name
-
-    def get_measurement_unit(self, obj):
-        return obj.ingredient.measurement_unit
+    id = serializers.ReadOnlyField(
+        source='ingredient.id')
+    name = serializers.ReadOnlyField(
+        source='ingredient.name')
+    measurement_unit = serializers.ReadOnlyField(
+        source='ingredient.measurement_unit')
 
     class Meta:
         model = RecipeIngredients
