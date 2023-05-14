@@ -11,8 +11,8 @@ services:
     image: cherash86/backend_foodgram3
     restart: always
     volumes:
-      - static_value:/app/static/
-      - media_value:/app/media/
+      - static_value:/app_back/static/
+      - media_value:/app_back/media/
     depends_on:
       - db
     env_file:
